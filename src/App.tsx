@@ -485,14 +485,6 @@ export default function App() {
   function loadSampleShared() {
     setSharedRefs(["REF_A", "REF_B", "REF_C", "REF_D"]);
   }
-  function loadSamplePerPrompt() {
-    setPerPromptRefs([
-      makePlaceholders(0, globalGroupCount),
-      makePlaceholders(1, globalGroupCount),
-      makePlaceholders(2, globalGroupCount),
-    ]);
-  }
-
   function syncGroupsToPrompts(fill = false) {
     setPerPromptRefs((prev) => {
       const next = prev.slice(0, prompts.length);
@@ -548,20 +540,26 @@ export default function App() {
 
   async function onCollect() {
     setCollecting(true);
-    const byIndex: Record<number, Handle> = {};
-    results.forEach((r) => {
-      byIndex[r.job.index] = r;
-    });
-    const aligned: Handle[] = jobs.map(
-      (j) =>
-        byIndex[j.index] || {
+    setResults((prev) => {
+      const byIndex = new Map<number, Handle>();
+      prev.forEach((r) => byIndex.set(r.job.index, r));
+
+      const handlesByIndex = new Map<number, Handle>();
+      handles.forEach((h) => handlesByIndex.set(h.job.index, h));
+
+      return jobs.map((j) => {
+        const existing = byIndex.get(j.index);
+        if (existing) return existing;
+        const queued = handlesByIndex.get(j.index);
+        if (queued) return queued;
+        return {
           job_id: `pending_${j.index}`,
           status: "queued",
           job: j,
           submit_ts: Date.now(),
-        }
-    );
-    setResults(aligned);
+        } as Handle;
+      });
+    });
     await new Promise((r) => setTimeout(r, 200));
     setCollecting(false);
   }
