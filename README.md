@@ -37,6 +37,34 @@ The dev server starts on [http://localhost:5173](http://localhost:5173) with hot
 - `npm run preview` – serve the build output locally for smoke testing.
 - `npm run lint` – run ESLint across the project.
 
+## Deployment
+
+### Deploying to Vercel
+
+1. **Push your code to GitHub/GitLab/Bitbucket.** Vercel connects directly to a Git provider, so make sure the latest changes are available in a remote repository.
+2. **Create a new project in Vercel.** From the Vercel dashboard, click **Add New… → Project** and import the repository. Grant access if prompted.
+3. **Confirm the build settings.** Vercel auto-detects Vite apps, but double-check:
+   - **Framework Preset:** `Vite`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+   - **Install Command:** `npm install`
+   - **Node.js Version:** `18.x` (or later)
+4. **Deploy.** Vercel installs dependencies, runs the build, and hosts the static output. The first deployment becomes your production environment; subsequent pushes create preview deployments per branch/PR.
+5. **(Optional) Configure the domain.** Use the generated `*.vercel.app` URL or assign a custom domain from the Vercel dashboard once the deployment succeeds.
+
+#### CLI Deploy (optional)
+
+If you prefer the Vercel CLI:
+
+```bash
+npm install -g vercel
+vercel login              # authenticate once
+vercel                    # deploy to a preview environment
+vercel --prod             # promote the current build to production
+```
+
+The CLI uses the same build/output defaults and stores configuration in `.vercel/project.json` after the first run.
+
 ## Using the Simulator
 - **Prompts Editor** – multiline editor where each line becomes a prompt input.
 - **Reference Groups** – configure mock image groups per prompt or as shared references; empty groups create text-only jobs.
