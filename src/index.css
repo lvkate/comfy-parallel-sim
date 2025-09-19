@@ -1,0 +1,20 @@
+/* ==== Tailwind layers 必须在最前，以便后面的自定义能覆盖 ==== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 占满屏幕 + 去默认外边距，避免初始布局收缩/居中 */
+html, body, #root { width: 100%; height: 100%; margin: 0; }
+
+/* 锁定整站为浅色方案（避免系统 Dark Mode 把文字变浅） */
+:root { color-scheme: light; }
+
+/* 明确基础文字颜色（Tailwind gray-900），避免“看不见字” */
+html, body { color: #111827; }
+
+/* 统一全选高亮（可选） */
+::selection { background: rgba(59, 130, 246, 0.30); color: inherit; }
+::-moz-selection { background: rgba(59, 130, 246, 0.30); color: inherit; }
+
+/* 轻微滚动条美化（可选） */
+* { scrollbar-width: thin; scrollbar-color: #c7c7c7 transparent; }
